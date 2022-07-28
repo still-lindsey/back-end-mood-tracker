@@ -1,6 +1,8 @@
 import pytest
-from app import create_app
 from app import db
+from app import create_app
+from app.models.day import Day
+from app.models.entry import Entry
 
 
 @pytest.fixture
@@ -20,3 +22,38 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+# This fixture creates a single card and saves it in the database
+# References "one_card"
+@pytest.fixture
+def one_day(app):
+    new_day = Day(
+        quote="Get some sunshine, its good for you!☀️ 😎 ",
+        author = "Lindsey",
+        date = "20220720")
+    db.session.add(new_day)
+    db.session.commit()
+
+
+# This fixture creates a single board and saves it in the database
+# References "one_board"
+@pytest.fixture
+def one_entry(app):
+    new_entry = Entry(
+        	title = "Hi",
+			memo = "A great dayyyy",
+			mood_score = 7,
+			activities = ["food", "hobbies"],
+			emotions = ["relaxed"],
+			day_id = 1)
+    db.session.add(new_entry)
+    db.session.commit()
+
+# This fixture creates a single board and a single card and saves it in the database
+# References "one_card_belongs_to_one_goal"
+@pytest.fixture
+def one_entry_belongs_to_one_day(app, one_day, one_entry):
+    entry = Entry.query.first()
+    day = Day.query.first()
+    day.entries.append(entry)
+    db.session.commit()

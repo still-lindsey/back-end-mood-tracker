@@ -1,27 +1,36 @@
+from tokenize import String
 from app import db
+from sqlalchemy.sql import func
 
 class Entry(db.Model):
 	entry_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-	title = db.Column(db.String, nullable = False)
-	owner = db.Column(db.String, nullable = False)
-	cards = db.relationship("Card", back_populates = "board", lazy = True)
-	color = db.Column(db.String, nullable = False)
+	day_id = db.Column(db.Integer, db.ForeignKey('day.day_id'))
+	title = db.Column("title", db.String, nullable = False)
+	memo = db.Column("memo", db.VARCHAR(1000), nullable = False)
+	mood_score = db.Column("mood_score", db.Float, nullable = False)
+	activities = db.Column("activities", db.ARRAY(db.String), nullable = False)
+	emotions = db.Column("emotions", db.ARRAY(db.String), nullable = False)
+	time_stamp = db.Column("time", db.DateTime, server_default=func.now())
+	day = db.relationship("Day", back_populates = "entries")
 	
 	def to_json(self):
-		cards = [item.to_json() for item in self.cards]
-		return {"board_id": self.board_id,
-                "title": self.title,
-				'owner': self.owner,
-				'cards': cards,
-				"color": self.color
-            }
+		return {"entry_id": self.entry_id,
+				"title": self.title,
+				"memo": self.memo,
+				"mood_score": self.mood_score,
+				"activities": self.activities,
+				"emotions": self.emotions,
+				"time_stamp": self.time_stamp
+			}
 			
 	@classmethod
-	def create(cls, req_body):
-		new_board = cls(
-			title = req_body['title'],
-			owner=req_body['owner'],
-			color=req_body["color"]
-			#cards=[]
+	def create(cls, req_body, day_id):
+		new_entry = cls(
+			title = req_body["title"],
+			memo = req_body["memo"],
+			mood_score = req_body["mood_score"],
+			activities = req_body["activities"],
+			emotions = req_body["emotions"],
+			day_id = day_id
 		)
-		return new_board	
+		return new_entry	
