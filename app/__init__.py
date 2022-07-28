@@ -1,31 +1,21 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
-from flask_cors import CORS
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
-db = SQLAlchemy()
-migrate = Migrate()
 load_dotenv()
 
+cred = credentials.Certificate(os.environ.get("GOOGLE_AUTHORIZATION_CREDENTIALS"))
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "SQLALCHEMY_DATABASE_URI")
-
-    # Import models here for Alembic setup
-    # from app.models.ExampleModel import ExampleModel
-
-    db.init_app(app)
-    migrate.init_app(app, db)
 
     # Register Blueprints here
     # from .routes import example_bp
     # app.register_blueprint(example_bp)
-
-    CORS(app)
     return app
