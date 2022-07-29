@@ -1,5 +1,6 @@
 from datetime import datetime
-from flask import Blueprint, jsonify, request, make_response, abort, json
+from flask import Blueprint, jsonify, request, make_response, abort
+import requests
 from app import db
 from app.models.day import Day
 from app.models.entry import Entry
@@ -66,9 +67,9 @@ quotes_bp = Blueprint('quotes_bp', __name__, url_prefix="/quotes")
 def get_random_quote():
 	url = "https://zenquotes.io/api/random"
 
-	response = request.get(url)
+	response = requests.get(url)
 
-	return response.json()
+	return response.json()[0], 200
 
 #additional functionality to like and save quotes
 
