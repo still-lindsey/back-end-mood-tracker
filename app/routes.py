@@ -9,25 +9,30 @@ from .helpers import validate_record, is_new_day, get_daily_quote
 
 days_bp = Blueprint('days_bp', __name__, url_prefix="/days")
 
-#user opened app 
+#user opened app
+#view current day info 
 @days_bp.route("", methods=["POST"])
 def create_day():
 	#every time the app is opened make a call to post new day
 	date = datetime.now()
 	#reformat to 8 char string date since it will be easy to parse
 	datestr = date.strftime("%Y") + date.strftime("%m") + date.strftime("%d")
+	day_of_week = date.strftime("%A")
+	month = date.strftime("%B")
+
 	#get quote from external api
 	response = get_daily_quote()
-	try:
-		if is_new_day(datestr):
-			new_day = Day.create(datestr, response)
-	except KeyError:
-		return abort(make_response(jsonify({"details":"Invalid data"}), 400))
+
+	if is_new_day(datestr):
+		new_day = Day.create( datestr, day_of_week, month, response)
 
 	db.session.add(new_day)
 	db.session.commit()
 
-	return {new_day.date: new_day.to_json()}, 201
+	result = new_day.to_json()
+	result["status"] = "just created"
+
+	return result, 201
 
 #post new entry
 @days_bp.route("/<day_id>/entries", methods=["POST"])
@@ -42,18 +47,21 @@ def create_entry_for(day_id):
 	db.session.add(new_entry)
 	db.session.commit()
 
-	return {"entry": new_entry.to_json()}, 201
+	return new_entry.to_json(), 201
 
 #get day by ID
+#will come in handly if I can scroll and select days on the welcome page
 @days_bp.route("/<day_id>", methods=["GET"])
 def get_day_by(day_id):
 	day = Day.query.get(day_id)
 	validate_record(Day, day_id)
 
 	days_response = day.to_json()
+	days_response["status"] = "already created"
 	return jsonify(days_response), 200
 
 #get all days
+#for view all days page
 @days_bp.route("", methods=["GET"])
 def get_all_days():
 	days = Day.query.all()
@@ -63,6 +71,8 @@ def get_all_days():
 
 quotes_bp = Blueprint('quotes_bp', __name__, url_prefix="/quotes")
 
+#get random quote
+#for random quote page
 @quotes_bp.route("", methods=["GET"])
 def get_random_quote():
 	url = "https://zenquotes.io/api/random"
@@ -93,6 +103,7 @@ DAYS_IN_EACH_MONTH = {
 	"12": 31
 }
 
+#for monthly analytics page
 @analytics_bp.route("/<day_id>", methods=["GET"])
 def get_month_analytics(day_id):
 	#logic to identify previous month

@@ -23,7 +23,11 @@ def is_new_day(date):
 
 	for day in days:
 		if day.date == date:
-			return abort(make_response({"message": f"User already visited app on {date} and day has already been already created."}))
+			result = day.to_json()
+			result["status"] = "already created"
+			#Instead of makeing a response with code 201, I should call the get method. BUT my front end requires
+			#201 message to work
+			return abort(make_response(result, 201))
 	
 	return True
 
