@@ -24,7 +24,7 @@ def create_day():
 	response = get_daily_quote()
 
 	if is_new_day(datestr):
-		new_day = Day.create( datestr, day_of_week, month, response)
+		new_day = Day.create(datestr, day_of_week, month, response)
 
 	db.session.add(new_day)
 	db.session.commit()
@@ -66,7 +66,7 @@ def get_day_by(day_id):
 def get_all_days():
 	days = Day.query.all()
 	days_response = {}
-	days_response = {day.date: day.to_json() for day in days}
+	days_response = [day.to_json() for day in days]
 	return jsonify(days_response), 200
 
 quotes_bp = Blueprint('quotes_bp', __name__, url_prefix="/quotes")
