@@ -3,6 +3,7 @@ from app import db
 from app import create_app
 from app.models.day import Day
 from app.models.entry import Entry
+from app.models.month import Month
 
 
 @pytest.fixture
@@ -26,12 +27,24 @@ def client(app):
 # This fixture creates a single card and saves it in the database
 # References "one_card"
 @pytest.fixture
+def one_month(app):
+    new_month = Month(
+        this_year="2022",
+        this_month = "07")
+    db.session.add(new_month)
+    db.session.commit()
+
+@pytest.fixture
 def one_day(app):
     new_day = Day(
         quote="Get some sunshine, its good for you!☀️ 😎 ",
         author = "Lindsey",
-        date = "20220720")
+        date = "20220701",
+        day_of_week = "Monday",
+        month_name = "July")
     db.session.add(new_day)
+    month = Month.query.get(1)
+    month.days.append(new_day)
     db.session.commit()
 
 

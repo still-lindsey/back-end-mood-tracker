@@ -35,10 +35,8 @@ def create_app(test_config=None):
     from .routes import quotes_bp
     app.register_blueprint(quotes_bp)
 
-
-    # Register Blueprints here
-    # from .routes import example_bp
-    # app.register_blueprint(example_bp)
+    from .routes import months_bp
+    app.register_blueprint(months_bp)
 
     CORS(app)
     return app

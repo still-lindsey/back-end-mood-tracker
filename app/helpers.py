@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request, make_response, abort
-from app import db
-from app.models.entry import Entry
+from app.models.month import Month
 from app.models.day import Day
 from app import db
 import requests
+from datetime import datetime
 
 def validate_record(cls, id):
 	try:
@@ -17,6 +17,21 @@ def validate_record(cls, id):
 		return abort(make_response({"message": f"{cls.__name__} {id} not found"}, 404))
 
 	return obj
+
+def get_month_id(new_month, new_year):
+	months = Month.query.all()
+
+	for month in months:
+		if month.this_month == new_month and month.this_year == new_year:
+			month_id = month.month_id
+			return month_id
+	
+	new_month = Month.create(new_month, new_year)
+	month_id = new_month.month_id
+	db.session.add(new_month)
+	db.session.commit()
+	return month_id
+	
 
 def is_new_day(date):
 	days = Day.query.all()
@@ -37,3 +52,75 @@ def get_daily_quote():
 	response = requests.get(url)
 
 	return response.json()
+
+def get_top_3_frequent_activities(mood_by_activities, entry_count):
+	top_3_most_freq_activities = []
+	mood_by_activities_copy = mood_by_activities.copy()
+	count = 3
+	while count > 0:
+		max_freq = 0
+		max_activity = None
+		for activity, value in mood_by_activities_copy.items():
+			if value["freq"] > max_freq: #does not account for ties
+				max_freq = value["freq"]
+				max_activity = activity
+		top_3_most_freq_activities.append([max_activity, max_freq / entry_count])
+		del mood_by_activities_copy[max_activity]
+		count -= 1
+	return top_3_most_freq_activities
+
+def get_top_3_frequent_feelings(mood_by_feelings, entry_count):
+	top_3_most_freq_feelings = []
+	mood_by_feelings_copy = mood_by_feelings.copy()
+	count = 3
+	while count > 0:
+		max_freq = 0
+		max_feeling = None
+		for feeling, value in mood_by_feelings_copy.items():
+			if value["freq"] > max_freq: #does not account for ties
+				max_freq = value["freq"]
+				max_feeling = feeling
+		top_3_most_freq_feelings.append([max_feeling, max_freq / entry_count])
+		del mood_by_feelings_copy[max_feeling]
+		count -= 1
+	return top_3_most_freq_feelings
+
+def get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries):
+	avg_mood_score_per_day_in_given_month = {}
+	for day in list_of_days_with_entries:
+		day_of_month = day.date[6:8]
+		avg_mood_per_day = 0
+		for entry in day.entries:
+			avg_mood_per_day += entry.mood_score
+
+		avg_mood_per_day = avg_mood_per_day / len(day.entries)
+		avg_mood_score_per_day_in_given_month[day_of_month] = avg_mood_per_day
+	return avg_mood_score_per_day_in_given_month
+
+def get_mood_by_activity(list_of_days_with_entries):
+	mood_by_activities = {} #shape= {"exercise": {"freq": 3, "aggregated_mood_score": 24.6}, "work": {"freq": 5, "aggregated_mood_score": 36.0}}
+	entry_count = 0
+	for day in list_of_days_with_entries:
+		for entry in day.entries:
+			entry_count += 1
+			for activity in entry.activities:
+				if mood_by_activities.get(activity) != None:
+					mood_by_activities[activity]["freq"] += 1
+					mood_by_activities[activity]["aggregated_mood_score"] += entry.mood_score
+				else:
+					mood_by_activities[activity] = {"freq": 1, "aggregated_mood_score": entry.mood_score}
+
+	return mood_by_activities, entry_count
+
+def get_mood_by_feeling(list_of_days_with_entries):
+	mood_by_feeling = {} #shape= {"sad": {"freq": 3, "aggregated_mood_score": 24.6}, "annoyed": {"freq": 5, "aggregated_mood_score": 36.0}}
+	for day in list_of_days_with_entries:
+		for entry in day.entries:
+			for feeling in entry.emotions:
+				if mood_by_feeling.get(feeling) != None:
+					mood_by_feeling[feeling]["freq"] += 1
+					mood_by_feeling[feeling]["aggregated_mood_score"] += entry.mood_score
+				else:
+					mood_by_feeling[feeling] = {"freq": 1, "aggregated_mood_score": entry.mood_score}
+
+	return mood_by_feeling
