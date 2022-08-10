@@ -13,8 +13,9 @@ days_bp = Blueprint('days_bp', __name__, url_prefix="/days")
 #view current day info 
 @days_bp.route("", methods=["POST"])
 def create_day():
+	LOCAL_TIMEZONE = datetime.now().astimezone().tzinfo 
 	#every time the app is opened make a call to post new month and day
-	date = datetime.now()
+	date = datetime.now(LOCAL_TIMEZONE)
 	#reformat to 8 char string date since it will be easy to parse
 	datestr = date.strftime("%Y") + date.strftime("%m") + date.strftime("%d")
 	datestr_month = date.strftime("%m")
