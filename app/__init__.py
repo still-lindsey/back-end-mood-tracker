@@ -28,6 +28,9 @@ def create_app(test_config=None):
     from app.models.entry import Entry
     from app.models.day import Day
     from app.models.month import Month
+    from app.models.entry import Entry
+    from app.models.day import Day
+    from app.models.month import Month
     
     db.init_app(app)
     migrate.init_app(app, db)
