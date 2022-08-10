@@ -1,5 +1,4 @@
 from tokenize import String
-
 from sqlalchemy import null
 from app import db
 from sqlalchemy.sql import func

@@ -1,9 +1,8 @@
 from tokenize import String
-
 from sqlalchemy import null
 from app import db
 from sqlalchemy.sql import func
-from .entry import Entry
+
 
 class Day(db.Model):
 	day_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
