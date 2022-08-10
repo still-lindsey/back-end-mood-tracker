@@ -149,9 +149,11 @@ def get_month_analytics(month_id):
 	#make dictionary of day: average mood
 	avg_mood_score_per_day_in_given_month = get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries, month)
 	
-	#get average mood for whole month 
-	average_mood_for_month = sum([value for value in avg_mood_score_per_day_in_given_month if value > 0]) / len([value for value in avg_mood_score_per_day_in_given_month if value > 0])
-	
+	#get average mood for whole month
+	if len(list_of_days_with_entries) != 0: 
+		average_mood_for_month = sum([value for value in avg_mood_score_per_day_in_given_month if value > 0]) / len([value for value in avg_mood_score_per_day_in_given_month if value > 0])
+	else:
+		average_mood_for_month = 0.0
 	#get positive days objects
 	positive_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] >= 5.0]
 	#get positive days objects
