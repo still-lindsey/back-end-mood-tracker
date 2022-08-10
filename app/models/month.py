@@ -1,8 +1,5 @@
 from app import db
-from tokenize import String
-from sqlalchemy import null
-from sqlalchemy.sql import func
-from .entry import Entry
+
 
 class Month(db.Model):
 	month_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
