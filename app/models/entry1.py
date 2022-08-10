@@ -32,6 +32,7 @@ class Entry(db.Model):
 			mood_score = req_body["mood_score"],
 			activities = req_body["activities"],
 			emotions = req_body["emotions"],
-			day_id = day_id
+			day_id = day_id,
+			time_stamp = req_body["time_stamp"]
 		)
 		return new_entry	
