@@ -64,7 +64,7 @@ def get_top_3_frequent_activities(mood_by_activities, entry_count):
 			if value["freq"] > max_freq: #does not account for ties
 				max_freq = value["freq"]
 				max_activity = activity
-		top_3_most_freq_activities.append([max_activity, max_freq / entry_count])
+		top_3_most_freq_activities.append({"activity": max_activity, "frequency": max_freq / entry_count})
 		del mood_by_activities_copy[max_activity]
 		count -= 1
 	return top_3_most_freq_activities
@@ -80,21 +80,26 @@ def get_top_3_frequent_feelings(mood_by_feelings, entry_count):
 			if value["freq"] > max_freq: #does not account for ties
 				max_freq = value["freq"]
 				max_feeling = feeling
-		top_3_most_freq_feelings.append([max_feeling, max_freq / entry_count])
+		top_3_most_freq_feelings.append({"feeling": max_feeling, "frequency": max_freq / entry_count})
 		del mood_by_feelings_copy[max_feeling]
 		count -= 1
 	return top_3_most_freq_feelings
 
-def get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries):
-	avg_mood_score_per_day_in_given_month = {}
-	for day in list_of_days_with_entries:
-		day_of_month = day.date[6:8]
-		avg_mood_per_day = 0
-		for entry in day.entries:
-			avg_mood_per_day += entry.mood_score
-
-		avg_mood_per_day = avg_mood_per_day / len(day.entries)
-		avg_mood_score_per_day_in_given_month[day_of_month] = avg_mood_per_day
+def get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries, month):
+	avg_mood_score_per_day_in_given_month = [-0.1] * 31
+	index = 0
+	for i in range(len(avg_mood_score_per_day_in_given_month)):
+		if index < len(list_of_days_with_entries):
+			day_of_month = list_of_days_with_entries[index].date[6:8] 
+		if index < len(list_of_days_with_entries) and int(day_of_month) == (i + 1):
+			avg_mood_per_day = 0
+			for entry in list_of_days_with_entries[index].entries:
+				avg_mood_per_day += entry.mood_score
+			avg_mood_per_day = avg_mood_per_day / len(list_of_days_with_entries[index].entries)
+			avg_mood_score_per_day_in_given_month[i] = avg_mood_per_day
+			index += 1
+		else:
+			continue
 	return avg_mood_score_per_day_in_given_month
 
 def get_mood_by_activity(list_of_days_with_entries):

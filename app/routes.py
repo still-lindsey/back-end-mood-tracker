@@ -18,13 +18,24 @@ def create_day():
 	date = datetime.now()
 	#reformat to 8 char string date since it will be easy to parse
 	datestr = date.strftime("%Y") + date.strftime("%m") + date.strftime("%d")
+	datestr_month = date.strftime("%m")
+	datestr_year = date.strftime("%Y")
 	day_of_week = date.strftime("%A")
 	month = date.strftime("%B")
+
+
+	# #########building test cases for analytics page rendering
+	# datestr = "20220731" #to change
+	# datestr_month = "07" #to change
+	# datestr_year = "2022" #to change
+	# day_of_week = "Monday"
+	# month = "July"
+	# ########
 
 	#get quote from external api
 	response = get_daily_quote()
 
-	month_id=get_month_id(date.strftime("%m"), date.strftime("%Y"))
+	month_id=get_month_id(datestr_month, datestr_year)
 	if is_new_day(datestr):
 		new_day = Day.create(datestr, day_of_week, month, response)
 
@@ -130,17 +141,22 @@ def get_month_analytics(month_id):
 	for day in month.days:
 		if len(day.entries) > 0:
 			list_of_days_with_entries.append(day) #day objects
+	
+	#handle empty month
+
+	if len(list_of_days_with_entries) == 0:
+		return abort(make_response({"message": f"Month {month_id} has no data. Please submit entries to see a report."}, 404))
 
 	#make dictionary of day: average mood
-	avg_mood_score_per_day_in_given_month = get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries)
+	avg_mood_score_per_day_in_given_month = get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries, month)
 	
 	#get average mood for whole month 
-	average_mood_for_month = sum(avg_mood_score_per_day_in_given_month.values()) / len(avg_mood_score_per_day_in_given_month)
+	average_mood_for_month = sum([value for value in avg_mood_score_per_day_in_given_month if value > 0]) / len([value for value in avg_mood_score_per_day_in_given_month if value > 0])
 	
 	#get positive days objects
-	positive_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[day.date[6:8]] >= 5.0]
+	positive_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] >= 5.0]
 	#get positive days objects
-	negative_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[day.date[6:8]] < 5.0]
+	negative_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] < 5.0 and avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] > 0]
 	#get num pos days
 	num_positive_days = len(positive_days)
 	#get num neg days
@@ -163,8 +179,7 @@ def get_month_analytics(month_id):
 	"num_negative_days": num_negative_days,
 	"positive_activities": positive_activities,
 	"negative_activities": negative_activities,
-	# "mood_by_activity": mood_by_activity,
-	# "mood_by_feeling": mood_by_feeling}
+	"mood_by_activity": mood_by_activity,
 	"top_three_activities_freq": top_3_frequent_activities,
 	"top_three_feelings_freq": top_3_frequent_feelings}
 	return jsonify(response), 200
