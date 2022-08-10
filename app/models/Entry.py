@@ -1,6 +1,7 @@
 from app import db
 from sqlalchemy.sql import func
 
+
 class Entry(db.Model):
 	entry_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
 	day_id = db.Column(db.Integer, db.ForeignKey('day.day_id'))
