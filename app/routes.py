@@ -1,11 +1,10 @@
+from app import db
 from datetime import datetime
 from flask import Blueprint, jsonify, request, make_response, abort
 import requests
-from app import db
 from app.models.day import Day
 from app.models.entry import Entry
 from app.models.month import Month
-from app import db
 from .helpers import validate_record, is_new_day, get_daily_quote, get_month_id, get_top_3_frequent_activities, get_avg_mood_score_per_day_in_given_month,get_mood_by_activity, get_mood_by_feeling, get_top_3_frequent_feelings
 
 days_bp = Blueprint('days_bp', __name__, url_prefix="/days")
