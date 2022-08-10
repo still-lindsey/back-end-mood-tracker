@@ -25,7 +25,6 @@ def create_app(test_config=None):
 
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
-    from app.models.entry import Entry
     
     db.init_app(app)
     migrate.init_app(app, db)
