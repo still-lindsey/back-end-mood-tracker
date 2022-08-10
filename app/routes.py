@@ -76,6 +76,16 @@ def create_entry_for(day_id):
 
 	return new_entry.to_json(), 201
 
+entries_bp = Blueprint('entries_bp', __name__, url_prefix="/entries")
+
+@entries_bp.route("/<entry_id>", methods=["DELETE"])
+def delete_entry_for(entry_id):
+	entry = validate_record(Entry, entry_id)
+
+	db.session.delete(entry)
+	db.session.commit()
+
+	return jsonify({"details":f'Entry {entry.entry_id} successfully deleted'}), 200
 #get day by ID
 #will come in handly if I can scroll and select days on the welcome page
 @days_bp.route("/<day_id>", methods=["GET"])
