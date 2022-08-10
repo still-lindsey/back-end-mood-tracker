@@ -37,8 +37,6 @@ pycodestyle==2.6.0
 pycparser==2.21
 pycryptodome==3.4.3
 pyparsing==2.4.7
-Pyrebase==3.0.27
-Pyrebase4==4.5.0
 pytest==6.2.3
 python-dateutil==2.8.1
 python-dotenv==0.15.0
