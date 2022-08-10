@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response, abort
-from app.models.month import Month
-from app.models.day import Day
+from .models.month import Month
+from .models.day import Day
 from app import db
 import requests
 from datetime import datetime

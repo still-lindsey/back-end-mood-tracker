@@ -25,12 +25,10 @@ def create_app(test_config=None):
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
     
-    from app.models.entry import Entry
-    from app.models.day import Day
-    from app.models.month import Month
-    from app.models.entry import Entry
-    from app.models.day import Day
-    from app.models.month import Month
+    from .models.entry import Entry
+    from .models.day import Day
+    from .models.month import Month
+
     
     db.init_app(app)
     migrate.init_app(app, db)
