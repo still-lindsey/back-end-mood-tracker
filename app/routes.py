@@ -143,8 +143,8 @@ def get_month_analytics(month_id):
 	
 	#handle empty month
 
-	if len(list_of_days_with_entries) == 0:
-		return abort(make_response({"message": f"Month {month_id} has no data. Please submit entries to see a report."}, 404))
+	# if len(list_of_days_with_entries) == 0:
+		# return abort(make_response({"message": f"Month {month_id} has no data. Please submit entries to see a report."}, 404))
 
 	#make dictionary of day: average mood
 	avg_mood_score_per_day_in_given_month = get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries, month)

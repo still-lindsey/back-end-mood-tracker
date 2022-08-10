@@ -55,6 +55,8 @@ def get_daily_quote():
 
 def get_top_3_frequent_activities(mood_by_activities, entry_count):
 	top_3_most_freq_activities = []
+	if entry_count == 0:
+		return top_3_most_freq_activities
 	mood_by_activities_copy = mood_by_activities.copy()
 	count = 3
 	while count > 0:
@@ -70,7 +72,10 @@ def get_top_3_frequent_activities(mood_by_activities, entry_count):
 	return top_3_most_freq_activities
 
 def get_top_3_frequent_feelings(mood_by_feelings, entry_count):
+
 	top_3_most_freq_feelings = []
+	if entry_count == 0:
+		return top_3_most_freq_feelings
 	mood_by_feelings_copy = mood_by_feelings.copy()
 	count = 3
 	while count > 0:
@@ -87,6 +92,8 @@ def get_top_3_frequent_feelings(mood_by_feelings, entry_count):
 
 def get_avg_mood_score_per_day_in_given_month(list_of_days_with_entries, month):
 	avg_mood_score_per_day_in_given_month = [-0.1] * 31
+	if len(list_of_days_with_entries) == 0:
+		return avg_mood_score_per_day_in_given_month
 	index = 0
 	for i in range(len(avg_mood_score_per_day_in_given_month)):
 		if index < len(list_of_days_with_entries):
