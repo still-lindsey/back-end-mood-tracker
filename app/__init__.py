@@ -26,7 +26,7 @@ def create_app(test_config=None):
     # from app.models.ExampleModel import ExampleModel
     
     from .models.day import Day
-    from .models.entry import Entry
+    from .models.entry1 import Entry
     from .models.month import Month
 
     

@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request, make_response, abort
 import requests
 from .models.day import Day
-from .models.entry import Entry
+from .models.entry1 import Entry
 from .models.month import Month
 from .helpers import validate_record, is_new_day, get_daily_quote, get_month_id, get_top_3_frequent_activities, get_avg_mood_score_per_day_in_given_month,get_mood_by_activity, get_mood_by_feeling, get_top_3_frequent_feelings
 

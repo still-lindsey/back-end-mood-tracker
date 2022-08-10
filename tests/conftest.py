@@ -2,7 +2,7 @@ import pytest
 from app import db
 from app import create_app
 from app.models.day import Day
-from app.models.entry import Entry
+from app.models.entry1 import Entry
 from app.models.month import Month
 
 
