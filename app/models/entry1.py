@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy.sql import func
+from datetime import datetime
 
 
 class Entry(db.Model):
@@ -10,7 +11,7 @@ class Entry(db.Model):
 	mood_score = db.Column("mood_score", db.Float, nullable = False)
 	activities = db.Column("activities", db.ARRAY(db.String), nullable = False)
 	emotions = db.Column("emotions", db.ARRAY(db.String), nullable = False)
-	time_stamp = db.Column("time", db.DateTime, server_default=func.now())
+	time_stamp = db.Column("time", db.DateTime, nullable = False)
 	day = db.relationship("Day", back_populates = "entries")
 	
 	def to_json(self):
