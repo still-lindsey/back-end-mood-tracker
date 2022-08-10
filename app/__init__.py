@@ -25,8 +25,8 @@ def create_app(test_config=None):
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
     
-    from .models.entry import Entry
     from .models.day import Day
+    from .models.entry import Entry
     from .models.month import Month
 
     
