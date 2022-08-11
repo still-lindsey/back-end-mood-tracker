@@ -168,7 +168,7 @@ def get_month_analytics(month_id):
 	#get positive days objects
 	positive_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] >= 5.0]
 	#get positive days objects
-	negative_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] < 5.0 and avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] > 0]
+	negative_days = [day for day in list_of_days_with_entries if avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] < 5.0 and avg_mood_score_per_day_in_given_month[int(day.date[6:8]) - 1] >= 0]
 	#get num pos days
 	num_positive_days = len(positive_days)
 	#get num neg days
