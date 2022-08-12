@@ -58,7 +58,10 @@ def get_top_3_frequent_activities(mood_by_activities, entry_count):
 	if entry_count == 0:
 		return top_3_most_freq_activities
 	mood_by_activities_copy = mood_by_activities.copy()
-	count = 3
+	if len(mood_by_activities) < 3:
+		count = len(mood_by_activities)
+	else:
+		count = 3
 	while count > 0:
 		max_freq = 0
 		max_activity = None
@@ -77,7 +80,10 @@ def get_top_3_frequent_feelings(mood_by_feelings, entry_count):
 	if entry_count == 0:
 		return top_3_most_freq_feelings
 	mood_by_feelings_copy = mood_by_feelings.copy()
-	count = 3
+	if len(mood_by_feelings) < 3:
+		count = len(mood_by_feelings)
+	else:
+		count = 3
 	while count > 0:
 		max_freq = 0
 		max_feeling = None
