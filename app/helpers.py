@@ -14,7 +14,8 @@ def validate_record(cls, id):
 	obj = cls.query.get(id)
 
 	if not obj:
-		return abort(make_response({"message": f"{cls.__name__} {id} not found"}, 404))
+		return False
+		# return abort(make_response({"message": f"{cls.__name__} {id} not found"}, 404))
 
 	return obj
 

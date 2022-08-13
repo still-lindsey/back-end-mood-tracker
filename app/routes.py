@@ -140,6 +140,16 @@ DAYS_IN_EACH_MONTH = {
 	"12": 31
 }
 
+####NOT WORKING#### NEED DIFFERENT WAY TO VALIDATE MONTH!!
+# @months_bp.route("/<month_id>", methods=["GET"])
+# def get_if_month_exists(month_id):
+# 	result = False
+# 	if validate_record(Month, month_id):
+# 		result = "valid"
+# 	else:
+# 		result = "invalid"
+	
+# 	return jsonify({"result": result}), 200
 #working!
 #for monthly analytics page
 @months_bp.route("/<month_id>/analytics", methods=["GET"])
