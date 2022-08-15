@@ -253,6 +253,11 @@ test_days = [
 "date": "20220806",
 "month": "August",
 "day_of_week": "Saturday"
+},
+{
+"date": "20220815",
+"month": "August",
+"day_of_week": "Sunday"
 }]
 
 @months_bp.route("", methods=["POST"])
