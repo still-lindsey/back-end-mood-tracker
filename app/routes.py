@@ -223,11 +223,7 @@ def get_month_analytics(month_id):
 #Days to Post
 
 
-test_days = [{
-"date": "20220501",
-"month": "May",
-"day_of_week": "Sunday"
-},
+test_days = [
 {
 "date": "20220507",
 "month": "May",
@@ -403,4 +399,4 @@ def post_test_days():
 		result = new_day.to_json()
 		result["status"] = "just created"
 
-		return result, 201
+	return result, 201
