@@ -225,41 +225,6 @@ def get_month_analytics(month_id):
 
 test_days = [
 {
-"date": "20220601",
-"month": "June",
-"day_of_week": "Wednesday"
-},
-{
-"date": "20220608",
-"month": "June",
-"day_of_week": "Wednesday"
-},
-{
-"date": "20220616",
-"month": "June",
-"day_of_week": "Thursday"
-},
-{
-"date": "20220622",
-"month": "June",
-"day_of_week": "Wednesday"
-},
-{
-"date": "20220623",
-"month": "June",
-"day_of_week": "Thursday"
-},
-{
-"date": "20220625",
-"month": "June",
-"day_of_week": "Saturday"
-},
-{
-"date": "20220627",
-"month": "June",
-"day_of_week": "Monday"
-},
-{
 "date": "20220701",
 "month": "July",
 "day_of_week": "Friday"
