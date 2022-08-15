@@ -14,7 +14,7 @@ days_bp = Blueprint('days_bp', __name__, url_prefix="/days")
 @days_bp.route("", methods=["POST"])
 def create_day():
 	request_body = request.get_json()
-	if request_body.get("date", None) == None and request_body.get("day_of_week", None) and request_body.get("month", None) == None:
+	if request_body == None:
 		LOCAL_TIMEZONE = datetime.now().astimezone().tzinfo 
 		#every time the app is opened make a call to post new month and day
 		date = datetime.now(LOCAL_TIMEZONE)
