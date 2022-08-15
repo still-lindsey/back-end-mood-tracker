@@ -6,7 +6,7 @@ from .models.day import Day
 from .models.entry1 import Entry
 from .models.month import Month
 from .helpers import validate_record, is_new_day, get_daily_quote, get_month_id, get_top_3_frequent_activities, get_avg_mood_score_per_day_in_given_month,get_mood_by_activity, get_mood_by_feeling, get_top_3_frequent_feelings
-
+import random
 days_bp = Blueprint('days_bp', __name__, url_prefix="/days")
 
 #user opened app
@@ -223,65 +223,32 @@ def get_month_analytics(month_id):
 #Days to Post
 
 
-test_days = [
-{
-"date": "20220801",
-"month": "August",
-"day_of_week": "Monday"
-},
-{
-"date": "20220802",
-"month": "August",
-"day_of_week": "Tuesday"
-},
-{
-"date": "20220803",
-"month": "August",
-"day_of_week": "Wednesday"
-},
-{
-"date": "20220804",
-"month": "August",
-"day_of_week": "Thursday"
-},
-{
-"date": "20220805",
-"month": "August",
-"day_of_week": "Friday"
-},
-{
-"date": "20220806",
-"month": "August",
-"day_of_week": "Saturday"
-},
-{
-"date": "20220815",
-"month": "August",
-"day_of_week": "Sunday"
-}]
+post = {
+"title": "Cooking",
+"memo": "Cooked a tofu hamburger steak and it was amazing...crispy on the outside and juicy on the inside...I've truly outdone myself.",
+"mood_score": 4.0,
+"activities": ["hobbies", "friends"],
+"emotions": ["happy", "loved", "excited", "confused"],
+"time_stamp": "Wed, 10 Aug 2022 10:43:20 GMT"
+}
 
 @months_bp.route("", methods=["POST"])
 def post_test_days():
-	for day in test_days:
-		datestr = day["date"]
-		day_of_week = day["day_of_week"]
-		month = day["month"]
-		datestr_month = day["date"][4:6]
-		datestr_year = day["date"][0:4]
+	for i in range(22,57):
+		post["mood_score"] = random.uniform(0.0, 10.0)
+		if post["mood_score"]  > 5.0:
+			post["activities"] = ["hobbies", "friends", "art"]
+			post["emotions"] = ["happy", "loved", "excited"]
+		else: 
+			post["activities"] = ["work", "sleep", "weather"]
+			post["emotions"] = ["sad", "confused", "worried"]
+			
+		try:
+			new_entry = Entry.create(post, i)
+		except KeyError:
+			return abort(make_response(jsonify({"details":"Invalid data"}), 400))
 
-		#get quote from external api
-		response = get_daily_quote()
-
-		month_id=get_month_id(datestr_month, datestr_year)
-		if is_new_day(datestr):
-			new_day = Day.create(datestr, day_of_week, month, response)
-
-		db.session.add(new_day)
-		month = Month.query.get(month_id)
-		month.days.append(new_day)
+		db.session.add(new_entry)
 		db.session.commit()
 
-		result = new_day.to_json()
-		result["status"] = "just created"
-
-	return result, 201
+	return new_entry.to_json(), 201
