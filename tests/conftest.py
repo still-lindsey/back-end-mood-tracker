@@ -35,16 +35,101 @@ def one_month(app):
     db.session.commit()
 
 @pytest.fixture
+def three_months(app):
+    month1 = Month(
+        this_year="2022",
+        this_month = "06")
+    month2 = Month(
+        this_year="2022",
+        this_month = "07")
+    month3 = Month(
+        this_year="2022",
+        this_month = "08")
+
+    db.session.add(month1)
+    db.session.add(month2)
+    db.session.add(month3)
+    db.session.commit()
+
+@pytest.fixture
+def three_months_with_days_and_entries(app):
+    month1 = Month(
+        this_year="2022",
+        this_month = "06")
+    month2 = Month(
+        this_year="2022",
+        this_month = "07")
+    month3 = Month(
+        this_year="2022",
+        this_month = "08")
+
+    db.session.add(month1)
+    db.session.add(month2)
+    db.session.add(month3)
+    db.session.commit()
+
+    for i in range(15):
+        new_day = Day(
+        date = f'202206{10 + 1}',
+        day_of_week = "Monday",
+        month_name = "June")
+        db.session.add(new_day)
+        db.session.commit()
+    for i in range(15):
+        new_day = Day(
+        date = f'202207{10 + 1}',
+        day_of_week = "Monday",
+        month_name = "July")
+        db.session.add(new_day)
+        db.session.commit()
+    for i in range(15):
+        new_day = Day(
+        date = f'202208{10 + 1}',
+        day_of_week = "Monday",
+        month_name = "August")
+        db.session.add(new_day)
+        db.session.commit()
+
+    for i in range(15):
+        new_entry = Entry(title = "Hi",
+			memo = "A great dayyyy",
+			mood_score = 7,
+			activities = ["food", "hobbies"],
+			emotions = ["relaxed"],
+            time_stamp = "Wed, 10 Aug 2022 10:43:20 GMT",
+            day_id = i + 1)
+        db.session.add(new_entry)
+        db.session.commit()
+    for i in range(15):
+        new_entry = Entry(title = "Hi",
+			memo = "A great dayyyy",
+			mood_score = 7,
+			activities = ["food", "hobbies"],
+			emotions = ["relaxed"],
+            time_stamp = "Wed, 10 Aug 2022 10:43:20 GMT",
+            day_id = i + 16)
+        db.session.add(new_entry)
+        db.session.commit()
+    for i in range(15):
+        new_entry = Entry(title = "Hi",
+			memo = "A great dayyyy",
+			mood_score = 7,
+			activities = ["food", "hobbies"],
+			emotions = ["relaxed"],
+            time_stamp = "Wed, 10 Aug 2022 10:43:20 GMT",
+            day_id = i + 31)
+        db.session.add(new_entry)
+        db.session.commit()
+    
+
+
+@pytest.fixture
 def one_day(app):
     new_day = Day(
-        quote="Get some sunshine, its good for you!☀️ 😎 ",
-        author = "Lindsey",
         date = "20220701",
         day_of_week = "Monday",
         month_name = "July")
     db.session.add(new_day)
-    month = Month.query.get(1)
-    month.days.append(new_day)
     db.session.commit()
 
 

@@ -13,15 +13,24 @@ days_bp = Blueprint('days_bp', __name__, url_prefix="/days")
 #view current day info 
 @days_bp.route("", methods=["POST"])
 def create_day():
-	LOCAL_TIMEZONE = datetime.now().astimezone().tzinfo 
-	#every time the app is opened make a call to post new month and day
-	date = datetime.now(LOCAL_TIMEZONE)
-	#reformat to 8 char string date since it will be easy to parse
-	datestr = date.strftime("%Y") + date.strftime("%m") + date.strftime("%d")
-	datestr_month = date.strftime("%m")
-	datestr_year = date.strftime("%Y")
-	day_of_week = date.strftime("%A")
-	month = date.strftime("%B")
+	request_body = request.get_json()
+	if request_body.get("date", None) == None and request_body.get("day_of_week", None) and request_body.get("month", None) == None:
+		LOCAL_TIMEZONE = datetime.now().astimezone().tzinfo 
+		#every time the app is opened make a call to post new month and day
+		date = datetime.now(LOCAL_TIMEZONE)
+		#reformat to 8 char string date since it will be easy to parse
+		datestr = date.strftime("%Y") + date.strftime("%m") + date.strftime("%d")
+		datestr_month = date.strftime("%m")
+		datestr_year = date.strftime("%Y")
+		day_of_week = date.strftime("%A")
+		month = date.strftime("%B")
+	else:
+		datestr = request_body["date"]
+		day_of_week = request_body["day_of_week"]
+		month = request_body["month"]
+		datestr_month = datestr[4:6]
+		datestr_year = datestr[0:4]
+
 
 
 	# #########building test cases for analytics page rendering
