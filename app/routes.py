@@ -95,6 +95,19 @@ def delete_entry_for(entry_id):
 	db.session.commit()
 
 	return jsonify({"details":f'Entry {entry.entry_id} successfully deleted'}), 200
+
+@days_bp.route("", methods=["DELETE"])
+def delete_all_data():
+	try: 
+		db.session.query(Entry).delete()
+		db.session.query(Day).delete()
+		db.session.query(Month).delete()
+		db.session.commit()
+	except:
+		db.session.rollback()
+    
+	return "Successfully deleted all data", 200
+
 #get day by ID
 #will come in handly if I can scroll and select days on the welcome page
 @days_bp.route("/<day_id>", methods=["GET"])
