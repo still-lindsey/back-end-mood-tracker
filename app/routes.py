@@ -207,7 +207,7 @@ def get_month_analytics(month_id):
 
 	top_3_frequent_feelings = get_top_3_frequent_feelings(mood_by_feeling, entry_count)
 
-	response = {"month_name": month["this_month"], "year": month["this_year"], "month_average_mood": average_mood_for_month, 
+	response = {"month_name": month.this_month, "year": month.this_year, "month_average_mood": average_mood_for_month, 
 	"days_average_moods": avg_mood_score_per_day_in_given_month,
 	"num_positive_days": num_positive_days,
 	"num_negative_days": num_negative_days,
