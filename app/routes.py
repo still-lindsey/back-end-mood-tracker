@@ -219,3 +219,188 @@ def get_month_analytics(month_id):
 	return jsonify(response), 200
  
 
+
+#Days to Post
+
+
+test_days = [{
+"date": "20220501",
+"month": "May",
+"day_of_week": "Sunday"
+},
+{
+"date": "20220507",
+"month": "May",
+"day_of_week": "Saturday"
+},
+{
+"date": "20220515",
+"month": "May",
+"day_of_week": "Sunday"
+},
+{
+"date": "20220520",
+"month": "May",
+"day_of_week": "Friday"
+},
+{
+"date": "20220601",
+"month": "June",
+"day_of_week": "Wednesdau"
+},
+{
+"date": "20220608",
+"month": "June",
+"day_of_week": "Wednesday"
+},
+{
+"date": "20220616",
+"month": "June",
+"day_of_week": "Thursday"
+},
+{
+"date": "20220622",
+"month": "June",
+"day_of_week": "Wednesday"
+},
+{
+"date": "20220623",
+"month": "June",
+"day_of_week": "Thursday"
+},
+{
+"date": "20220625",
+"month": "June",
+"day_of_week": "Saturday"
+},
+{
+"date": "20220627",
+"month": "June",
+"day_of_week": "Monday"
+},
+{
+"date": "20220701",
+"month": "July",
+"day_of_week": "Friday"
+},
+{
+"date": "20220702",
+"month": "July",
+"day_of_week": "Saturday"
+},
+{
+"date": "20220703",
+"month": "July",
+"day_of_week": "Sunday"
+},
+{
+"date": "20220704",
+"month": "July",
+"day_of_week": "Monday"
+},
+{
+"date": "20220705",
+"month": "July",
+"day_of_week": "Tuesday"
+},
+{
+"date": "20220706",
+"month": "July",
+"day_of_week": "Wednesday"
+},
+{
+"date": "20220707",
+"month": "July",
+"day_of_week": "Thursday"
+},
+{
+"date": "20220708",
+"month": "July",
+"day_of_week": "Friday"
+},
+{
+"date": "20220709",
+"month": "July",
+"day_of_week": "Saturday"
+},
+{
+"date": "20220710",
+"month": "July",
+"day_of_week": "Sunday"
+},
+{
+"date": "20220711",
+"month": "July",
+"day_of_week": "Monday"
+},
+{
+"date": "20220712",
+"month": "July",
+"day_of_week": "Tuesday"
+},
+{
+"date": "20220713",
+"month": "July",
+"day_of_week": "Wednesday"
+},
+{
+"date": "20220714",
+"month": "July",
+"day_of_week": "Thursday"
+},
+{
+"date": "20220801",
+"month": "August",
+"day_of_week": "Monday"
+},
+{
+"date": "20220802",
+"month": "August",
+"day_of_week": "Tuesday"
+},
+{
+"date": "20220803",
+"month": "August",
+"day_of_week": "Wednesday"
+},
+{
+"date": "20220804",
+"month": "August",
+"day_of_week": "Thursday"
+},
+{
+"date": "20220805",
+"month": "August",
+"day_of_week": "Friday"
+},
+{
+"date": "20220806",
+"month": "August",
+"day_of_week": "Saturday"
+}]
+
+@months_bp.route("", methods=["POST"])
+def post_test_days():
+	for day in test_days:
+		datestr = day["date"]
+		day_of_week = day["day_of_week"]
+		month = day["month"]
+		datestr_month = day["date"][4:6]
+		datestr_year = day["date"][0:4]
+
+		#get quote from external api
+		response = get_daily_quote()
+
+		month_id=get_month_id(datestr_month, datestr_year)
+		if is_new_day(datestr):
+			new_day = Day.create(datestr, day_of_week, month, response)
+
+		db.session.add(new_day)
+		month = Month.query.get(month_id)
+		month.days.append(new_day)
+		db.session.commit()
+
+		result = new_day.to_json()
+		result["status"] = "just created"
+
+		return result, 201
