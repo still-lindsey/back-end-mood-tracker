@@ -234,7 +234,7 @@ post = {
 
 @months_bp.route("", methods=["POST"])
 def post_test_days():
-	for i in range(27,57):
+	for i in range(35,57):
 		post["mood_score"] = random.uniform(0.0, 10.0)
 		if post["mood_score"]  > 5.0:
 			post["activities"] = ["hobbies", "friends", "art"]
